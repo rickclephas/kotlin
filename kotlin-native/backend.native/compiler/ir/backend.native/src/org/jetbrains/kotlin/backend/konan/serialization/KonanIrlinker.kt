@@ -693,6 +693,7 @@ internal class KonanIrLinker(
             if (function.parents.any { (it as? IrFunction)?.isInline == true}) {
                 // Already deserialized by the top-most inline function.
                 return InlineFunctionInfo(
+                        function,
                         inlineFunctionFiles[packageFragment]
                                 ?: error("${function.render()} should've been deserialized along with its parent"),
                         function.startOffset, function.endOffset
@@ -750,7 +751,7 @@ internal class KonanIrLinker(
 
             inlineFunctionFiles[packageFragment] = fileDeserializationInfo.file
 
-            return InlineFunctionInfo(fileDeserializationInfo.file, inlineFunctionReference.startOffset, inlineFunctionReference.endOffset)
+            return InlineFunctionInfo(function, fileDeserializationInfo.file, inlineFunctionReference.startOffset, inlineFunctionReference.endOffset)
         }
 
         private val classesFields by lazy {
