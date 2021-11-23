@@ -60,9 +60,12 @@ bitcode {
             "${target}LegacyMemoryManager",
             "${target}ExperimentalMemoryManagerNoop",
             "${target}ExperimentalMemoryManagerStms",
+            "${target}ExperimentalMemoryManagerCms",
             "${target}CommonGcNoop",
             "${target}CommonGcStms",
+            "${target}CommonGcCms",
             "${target}SameThreadMsGc",
+            "${target}ConcurrentMsGc",
             "${target}NoopGc"
         )
         includeRuntime()
@@ -181,6 +184,11 @@ bitcode {
         includeRuntime()
     }
 
+    create("experimental_memory_manager_cms", file("src/mm")) {
+        headersDirs += files("src/gc/cms/cpp", "src/gc/common/cpp")
+        includeRuntime()
+    }
+
     create("common_gc_noop", file("src/gc/common")) {
         headersDirs += files("src/gc/noop/cpp", "src/mm/cpp")
         includeRuntime()
@@ -191,6 +199,11 @@ bitcode {
         includeRuntime()
     }
 
+    create("common_gc_cms", file("src/gc/common")) {
+        headersDirs += files("src/gc/cms/cpp", "src/mm/cpp")
+        includeRuntime()
+    }
+
     create("noop_gc", file("src/gc/noop")) {
         headersDirs += files("src/gc/noop/cpp", "src/gc/common/cpp", "src/mm/cpp")
         includeRuntime()
@@ -198,6 +211,11 @@ bitcode {
 
     create("same_thread_ms_gc", file("src/gc/stms")) {
         headersDirs += files("src/gc/stms/cpp", "src/gc/common/cpp", "src/mm/cpp")
+        includeRuntime()
+    }
+
+    create("concurrent_ms_gc", file("src/gc/cms")) {
+        headersDirs += files("src/gc/cms/cpp", "src/gc/common/cpp", "src/mm/cpp")
         includeRuntime()
     }
 }
@@ -268,6 +286,41 @@ targetList.forEach { targetName ->
             )
     ) {
         headersDirs += files("src/gc/stms/cpp", "src/gc/common/cpp", "src/mm/cpp")
+        includeRuntime()
+    })
+
+    allTests.addAll(createTestTasks(
+            project,
+            targetName,
+            "${targetName}ExperimentalMMCmsMimallocRuntimeTests",
+            listOf(
+                    "${targetName}Runtime",
+                    "${targetName}ExperimentalMemoryManagerCms",
+                    "${targetName}CommonGcCms",
+                    "${targetName}ConcurrentMsGc",
+                    "${targetName}Mimalloc",
+                    "${targetName}OptAlloc",
+                    "${targetName}Objc"
+            )
+    ) {
+        headersDirs += files("src/gc/cms/cpp", "src/gc/common/cpp", "src/mm/cpp")
+        includeRuntime()
+    })
+
+    allTests.addAll(createTestTasks(
+            project,
+            targetName,
+            "${targetName}ExperimentalMMCmsStdAllocRuntimeTests",
+            listOf(
+                    "${targetName}Runtime",
+                    "${targetName}ExperimentalMemoryManagerCms",
+                    "${targetName}CommonGcCms",
+                    "${targetName}ConcurrentMsGc",
+                    "${targetName}StdAlloc",
+                    "${targetName}Objc"
+            )
+    ) {
+        headersDirs += files("src/gc/cms/cpp", "src/gc/common/cpp", "src/mm/cpp")
         includeRuntime()
     })
 
