@@ -47,7 +47,7 @@ const val FIR_LOGS_PATH = "tmp/fir-logs"
 private const val FIR_MEMORY_DUMPS_PATH = "tmp/memory-dumps"
 
 private val DUMP_FIR = System.getProperty("fir.bench.dump", "true").toBooleanLenient()!!
-internal val PASSES = System.getProperty("fir.bench.passes")?.toInt() ?: 3
+internal val PASSES = System.getProperty("fir.bench.passes")?.toInt() ?: 1
 internal val SEPARATE_PASS_DUMP = System.getProperty("fir.bench.dump.separate_pass", "false").toBooleanLenient()!!
 private val APPEND_ERROR_REPORTS = System.getProperty("fir.bench.report.errors.append", "false").toBooleanLenient()!!
 private val RUN_CHECKERS = System.getProperty("fir.bench.run.checkers", "false").toBooleanLenient()!!

@@ -59,7 +59,7 @@ private fun NodeList.toList(): List<Node> {
 
 private val Node.childNodesList get() = childNodes.toList()
 
-private val ROOT_PATH_PREFIX = System.getProperty("fir.bench.prefix", "/")
+private val ROOT_PATH_PREFIX = System.getProperty("fir.bench.prefix", "G:/testData/kotlin")
 
 abstract class AbstractModularizedTest : KtUsefulTestCase() {
     private val folderDateFormat = SimpleDateFormat("yyyy-MM-dd")
@@ -175,7 +175,7 @@ abstract class AbstractModularizedTest : KtUsefulTestCase() {
 
     protected fun runTestOnce(pass: Int) {
         beforePass(pass)
-        val testDataPath = System.getProperty("fir.bench.jps.dir")?.toString() ?: "/Users/jetbrains/jps"
+        val testDataPath = System.getProperty("fir.bench.jps.dir")?.toString() ?: "G:/testData/kotlin/test-project-model-dump"
         val root = File(testDataPath)
 
         println("BASE PATH: ${root.absolutePath}")

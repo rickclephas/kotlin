@@ -127,6 +127,9 @@ class FirTypeIntersectionScope private constructor(
                         else mostSpecific.fir.originalForSubstitutionOverride
                     }
                     if (allOverrides.size > 1) {
+                        if (mostSpecific.callableId.classId?.shortClassName?.asString() == "FirElement") {
+                            println()
+                        }
                         mostSpecific.fir.allOverridesForSubstitutionOverrideAttr = allOverrides
                     }
                 }
@@ -178,7 +181,14 @@ class FirTypeIntersectionScope private constructor(
         // If in fact extracted overrides are the same symbols,
         // we should just take most specific member without creating intersection
         // A typical sample here is inheritance of the same class in different places of hierarchy
-        if (unwrappedMemberSet.size == 1) {
+        if (unwrappedMemberSet.size == 1 &&
+            // With implicit type references we cannot select most specific member here
+            // should we check dispatch receiver types?
+            none { it.member.fir.returnTypeRef is FirImplicitTypeRef }
+        ) {
+            if (first().member.callableId.classId?.shortClassName?.asString() == "FirElement") {
+                println()
+            }
             return listOf(selectMostSpecificMember(this))
         }
 
@@ -202,6 +212,9 @@ class FirTypeIntersectionScope private constructor(
                     ProcessorAction.NEXT
                 }
             }
+        }
+        if (first().member.callableId.classId?.shortClassName?.asString() == "FirElement") {
+            println()
         }
         return filterNot { (member, _) -> member.fir.unwrapSubstitutionOverrides().symbol in baseMembers }
     }

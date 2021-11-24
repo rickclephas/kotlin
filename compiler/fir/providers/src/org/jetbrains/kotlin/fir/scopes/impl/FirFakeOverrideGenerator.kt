@@ -85,7 +85,6 @@ object FirFakeOverrideGenerator {
             fakeOverrideSubstitution = fakeOverrideSubstitution
         ).apply {
             originalForSubstitutionOverrideAttr = baseFunction
-            allOverridesForSubstitutionOverrideAttr = null
         }
     }
 
@@ -119,6 +118,8 @@ object FirFakeOverrideGenerator {
                 session, baseFunction, newParameterTypes, newTypeParameters, newReceiverType, newReturnType, fakeOverrideSubstitution
             ).filterIsInstance<FirTypeParameter>()
             deprecation = baseFunction.deprecation
+        }.apply {
+            allOverridesForSubstitutionOverrideAttr = null
         }
     }
 
@@ -280,7 +281,6 @@ object FirFakeOverrideGenerator {
             fakeOverrideSubstitution = fakeOverrideSubstitution
         ).apply {
             originalForSubstitutionOverrideAttr = baseProperty
-            allOverridesForSubstitutionOverrideAttr = null
         }
         return symbol
     }
@@ -321,6 +321,8 @@ object FirFakeOverrideGenerator {
                 fakeOverrideSubstitution
             )
             deprecation = baseProperty.deprecation
+        }.apply {
+            allOverridesForSubstitutionOverrideAttr = null
         }
     }
 
