@@ -181,11 +181,7 @@ class FirTypeIntersectionScope private constructor(
         // If in fact extracted overrides are the same symbols,
         // we should just take most specific member without creating intersection
         // A typical sample here is inheritance of the same class in different places of hierarchy
-        if (unwrappedMemberSet.size == 1 &&
-            // With implicit type references we cannot select most specific member here
-            // should we check dispatch receiver types?
-            none { it.member.fir.returnTypeRef is FirImplicitTypeRef }
-        ) {
+        if (unwrappedMemberSet.size == 1) {
             if (first().member.callableId.classId?.shortClassName?.asString() == "FirElement") {
                 println()
             }
@@ -441,20 +437,43 @@ class FirTypeIntersectionScope private constructor(
 
         val substitutor = buildSubstitutorForOverridesCheck(aFir, bFir, session) ?: return false
         // NB: these lines throw CCE in modularized tests when changed to just .coneType (FirImplicitTypeRef)
-        val aReturnType = a.fir.returnTypeRef.coneTypeSafe<ConeKotlinType>()?.let(substitutor::substituteOrSelf) ?: return false
-        val bReturnType = b.fir.returnTypeRef.coneTypeSafe<ConeKotlinType>() ?: return false
+        val aReturnType = a.fir.returnTypeRef.coneTypeSafe<ConeKotlinType>()?.let(substitutor::substituteOrSelf)
+        val bReturnType = b.fir.returnTypeRef.coneTypeSafe<ConeKotlinType>()
+        val aDispatchReceiverType = a.fir.dispatchReceiverType
+        val bDispatchReceiverType = b.fir.dispatchReceiverType
 
         if (aFir is FirSimpleFunction) {
             require(bFir is FirSimpleFunction) { "b is " + b.javaClass }
-            return isTypeMoreSpecific(aReturnType, bReturnType)
+            if (aReturnType != null && bReturnType != null) {
+                return isTypeMoreSpecific(aReturnType, bReturnType)
+            }
+            if (aDispatchReceiverType != null && bDispatchReceiverType != null) {
+                return isTypeMoreSpecific(aDispatchReceiverType, bDispatchReceiverType)
+            }
+            return false
         }
         if (aFir is FirProperty) {
             require(bFir is FirProperty) { "b is " + b.javaClass }
             // TODO: if (!OverridingUtil.isAccessorMoreSpecific(pa.getSetter(), pb.getSetter())) return false
             return if (aFir.isVar && bFir.isVar) {
-                AbstractTypeChecker.equalTypes(typeCheckerState, aReturnType, bReturnType)
+                if (aReturnType != null && bReturnType != null &&
+                    !AbstractTypeChecker.equalTypes(typeCheckerState, aReturnType, bReturnType)
+                ) {
+                    false
+                } else if (aDispatchReceiverType != null && bDispatchReceiverType != null) {
+                    return isTypeMoreSpecific(aDispatchReceiverType, bDispatchReceiverType)
+                } else {
+                    false
+                }
             } else { // both vals or var vs val: val can't be more specific then var
-                !(!aFir.isVar && bFir.isVar) && isTypeMoreSpecific(aReturnType, bReturnType)
+                if (!aFir.isVar && bFir.isVar) return false
+                if (aReturnType != null && bReturnType != null) {
+                    return isTypeMoreSpecific(aReturnType, bReturnType)
+                }
+                if (aDispatchReceiverType != null && bDispatchReceiverType != null) {
+                    return isTypeMoreSpecific(aDispatchReceiverType, bDispatchReceiverType)
+                }
+                return false
             }
         }
         throw IllegalArgumentException("Unexpected callable: " + a.javaClass)
