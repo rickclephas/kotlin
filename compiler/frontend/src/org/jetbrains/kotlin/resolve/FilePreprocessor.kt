@@ -29,7 +29,7 @@ class FilePreprocessor(
     private fun registerFileByPackage(file: KtFile) {
         // Register files corresponding to this package
         // The trace currently does not support bi-di multimaps that would handle this task nicer
-        trace.addElementToSlice(PACKAGE_TO_FILES, file.packageFqName, file)
+        trace.addElementToSlice(PACKAGE_TO_FILES, file.packageFqNameByTree, file)
     }
 }
 
