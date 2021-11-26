@@ -15,7 +15,7 @@ import org.jetbrains.kotlin.gradle.logging.kotlinDebug
 import org.jetbrains.kotlin.gradle.plugin.internal.state.TaskExecutionResults
 import org.jetbrains.kotlin.gradle.plugin.internal.state.TaskLoggers
 import org.jetbrains.kotlin.gradle.plugin.stat.ReportStatistics
-import org.jetbrains.kotlin.gradle.plugin.statistics.KotlinBuildEsStatListener
+import org.jetbrains.kotlin.gradle.plugin.statistics.KotlinBuildStatListener
 import org.jetbrains.kotlin.gradle.plugin.statistics.ReportStatisticsToBuildScan
 import org.jetbrains.kotlin.gradle.plugin.statistics.ReportStatisticsToElasticSearch
 import org.jetbrains.kotlin.gradle.report.configureReporting
@@ -67,7 +67,7 @@ abstract class KotlinGradleBuildServices : BuildService<KotlinGradleBuildService
                     project.rootProject.extensions.findByName("buildScan")
                         ?.also { listeners.add(ReportStatisticsToBuildScan(it as BuildScanExtension)) }
                 }
-                KotlinBuildEsStatListener(project.rootProject.name, listeners.get())
+                KotlinBuildStatListener(project.rootProject.name, listeners.get())
             }
 
             val listenerRegistryHolder = BuildEventsListenerRegistryHolder.getInstance(project)
