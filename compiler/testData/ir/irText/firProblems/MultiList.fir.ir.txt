@@ -196,58 +196,58 @@ FILE fqName:<root> fileName:/MultiList.kt
         DELEGATING_CONSTRUCTOR_CALL 'public constructor <init> () declared in java.util.ArrayList'
           <E>: <root>.Some<T of <root>.SomeList>
         INSTANCE_INITIALIZER_CALL classDescriptor='CLASS CLASS name:SomeList modality:OPEN visibility:public superTypes:[<root>.MyList<T of <root>.SomeList>; java.util.ArrayList<<root>.Some<T of <root>.SomeList>>]'
-    FUN FAKE_OVERRIDE name:contains visibility:public modality:OPEN <> ($this:kotlin.collections.List<E of kotlin.collections.List>, element:@[EnhancedNullability] <root>.Some<T of <root>.SomeList>) returnType:kotlin.Boolean [fake_override,operator]
+    FUN FAKE_OVERRIDE name:contains visibility:public modality:OPEN <> ($this:kotlin.collections.List<E of kotlin.collections.List>, element:<root>.Some<T of <root>.SomeList>) returnType:kotlin.Boolean [fake_override,operator]
       overridden:
         public abstract fun contains (element: <root>.Some<T of <root>.MyList>): kotlin.Boolean [fake_override,operator] declared in <root>.MyList
         public open fun contains (p0: @[EnhancedNullability] E of java.util.ArrayList): kotlin.Boolean [operator] declared in java.util.ArrayList
       $this: VALUE_PARAMETER name:<this> type:kotlin.collections.List<E of kotlin.collections.List>
-      VALUE_PARAMETER name:element index:0 type:@[EnhancedNullability] <root>.Some<T of <root>.SomeList>
+      VALUE_PARAMETER name:element index:0 type:<root>.Some<T of <root>.SomeList>
     FUN FAKE_OVERRIDE name:containsAll visibility:public modality:OPEN <> ($this:kotlin.collections.List<E of kotlin.collections.List>, elements:kotlin.collections.Collection<<root>.Some<T of <root>.SomeList>>) returnType:kotlin.Boolean [fake_override]
       overridden:
         public abstract fun containsAll (elements: kotlin.collections.Collection<<root>.Some<T of <root>.MyList>>): kotlin.Boolean [fake_override] declared in <root>.MyList
         public open fun containsAll (p0: kotlin.collections.Collection<@[FlexibleNullability] E of java.util.ArrayList?>): kotlin.Boolean [fake_override] declared in java.util.ArrayList
       $this: VALUE_PARAMETER name:<this> type:kotlin.collections.List<E of kotlin.collections.List>
       VALUE_PARAMETER name:elements index:0 type:kotlin.collections.Collection<<root>.Some<T of <root>.SomeList>>
-    FUN FAKE_OVERRIDE name:get visibility:public modality:OPEN <> ($this:kotlin.collections.List<E of kotlin.collections.List>, index:kotlin.Int) returnType:@[EnhancedNullability] <root>.Some<T of <root>.SomeList> [fake_override,operator]
+    FUN FAKE_OVERRIDE name:get visibility:public modality:OPEN <> ($this:kotlin.collections.List<E of kotlin.collections.List>, index:kotlin.Int) returnType:<root>.Some<T of <root>.SomeList> [fake_override,operator]
       overridden:
         public abstract fun get (index: kotlin.Int): <root>.Some<T of <root>.MyList> [fake_override,operator] declared in <root>.MyList
-        public open fun get (p0: kotlin.Int): @[FlexibleNullability] E of java.util.ArrayList? [operator] declared in java.util.ArrayList
+        public open fun get (p0: kotlin.Int): @[EnhancedNullability] E of java.util.ArrayList [operator] declared in java.util.ArrayList
       $this: VALUE_PARAMETER name:<this> type:kotlin.collections.List<E of kotlin.collections.List>
       VALUE_PARAMETER name:index index:0 type:kotlin.Int
-    FUN FAKE_OVERRIDE name:indexOf visibility:public modality:OPEN <> ($this:kotlin.collections.List<E of kotlin.collections.List>, element:@[EnhancedNullability] <root>.Some<T of <root>.SomeList>) returnType:kotlin.Int [fake_override]
+    FUN FAKE_OVERRIDE name:indexOf visibility:public modality:OPEN <> ($this:kotlin.collections.List<E of kotlin.collections.List>, element:<root>.Some<T of <root>.SomeList>) returnType:kotlin.Int [fake_override]
       overridden:
         public abstract fun indexOf (element: <root>.Some<T of <root>.MyList>): kotlin.Int [fake_override] declared in <root>.MyList
         public open fun indexOf (p0: @[EnhancedNullability] E of java.util.ArrayList): kotlin.Int declared in java.util.ArrayList
       $this: VALUE_PARAMETER name:<this> type:kotlin.collections.List<E of kotlin.collections.List>
-      VALUE_PARAMETER name:element index:0 type:@[EnhancedNullability] <root>.Some<T of <root>.SomeList>
+      VALUE_PARAMETER name:element index:0 type:<root>.Some<T of <root>.SomeList>
     FUN FAKE_OVERRIDE name:isEmpty visibility:public modality:OPEN <> ($this:kotlin.collections.List<E of kotlin.collections.List>) returnType:kotlin.Boolean [fake_override]
       overridden:
         public abstract fun isEmpty (): kotlin.Boolean [fake_override] declared in <root>.MyList
         public open fun isEmpty (): kotlin.Boolean declared in java.util.ArrayList
       $this: VALUE_PARAMETER name:<this> type:kotlin.collections.List<E of kotlin.collections.List>
-    FUN FAKE_OVERRIDE name:iterator visibility:public modality:OPEN <> ($this:kotlin.collections.List<E of kotlin.collections.List>) returnType:kotlin.collections.Iterator<@[EnhancedNullability] <root>.Some<T of <root>.SomeList>> [fake_override,operator]
+    FUN FAKE_OVERRIDE name:iterator visibility:public modality:OPEN <> ($this:kotlin.collections.List<E of kotlin.collections.List>) returnType:kotlin.collections.Iterator<<root>.Some<T of <root>.SomeList>> [fake_override,operator]
       overridden:
         public abstract fun iterator (): kotlin.collections.Iterator<<root>.Some<T of <root>.MyList>> [fake_override,operator] declared in <root>.MyList
-        public open fun iterator (): @[EnhancedNullability] kotlin.collections.MutableIterator<@[FlexibleNullability] E of java.util.ArrayList?> [operator] declared in java.util.ArrayList
+        public open fun iterator (): @[EnhancedNullability] kotlin.collections.MutableIterator<@[EnhancedNullability] E of java.util.ArrayList> [operator] declared in java.util.ArrayList
       $this: VALUE_PARAMETER name:<this> type:kotlin.collections.List<E of kotlin.collections.List>
-    FUN FAKE_OVERRIDE name:lastIndexOf visibility:public modality:OPEN <> ($this:kotlin.collections.List<E of kotlin.collections.List>, element:@[EnhancedNullability] <root>.Some<T of <root>.SomeList>) returnType:kotlin.Int [fake_override]
+    FUN FAKE_OVERRIDE name:lastIndexOf visibility:public modality:OPEN <> ($this:kotlin.collections.List<E of kotlin.collections.List>, element:<root>.Some<T of <root>.SomeList>) returnType:kotlin.Int [fake_override]
       overridden:
         public abstract fun lastIndexOf (element: <root>.Some<T of <root>.MyList>): kotlin.Int [fake_override] declared in <root>.MyList
-        public open fun lastIndexOf (p0: @[FlexibleNullability] E of java.util.ArrayList?): kotlin.Int declared in java.util.ArrayList
+        public open fun lastIndexOf (p0: @[EnhancedNullability] E of java.util.ArrayList): kotlin.Int declared in java.util.ArrayList
       $this: VALUE_PARAMETER name:<this> type:kotlin.collections.List<E of kotlin.collections.List>
-      VALUE_PARAMETER name:element index:0 type:@[EnhancedNullability] <root>.Some<T of <root>.SomeList>
-    FUN FAKE_OVERRIDE name:listIterator visibility:public modality:OPEN <> ($this:kotlin.collections.List<E of kotlin.collections.List>) returnType:kotlin.collections.ListIterator<@[EnhancedNullability] <root>.Some<T of <root>.SomeList>> [fake_override]
+      VALUE_PARAMETER name:element index:0 type:<root>.Some<T of <root>.SomeList>
+    FUN FAKE_OVERRIDE name:listIterator visibility:public modality:OPEN <> ($this:kotlin.collections.List<E of kotlin.collections.List>) returnType:kotlin.collections.ListIterator<<root>.Some<T of <root>.SomeList>> [fake_override]
       overridden:
         public abstract fun listIterator (): kotlin.collections.ListIterator<<root>.Some<T of <root>.MyList>> [fake_override] declared in <root>.MyList
-        public open fun listIterator (): @[EnhancedNullability] kotlin.collections.MutableListIterator<@[FlexibleNullability] E of java.util.ArrayList?> declared in java.util.ArrayList
+        public open fun listIterator (): @[EnhancedNullability] kotlin.collections.MutableListIterator<@[EnhancedNullability] E of java.util.ArrayList> declared in java.util.ArrayList
       $this: VALUE_PARAMETER name:<this> type:kotlin.collections.List<E of kotlin.collections.List>
-    FUN FAKE_OVERRIDE name:listIterator visibility:public modality:OPEN <> ($this:kotlin.collections.List<E of kotlin.collections.List>, index:kotlin.Int) returnType:kotlin.collections.ListIterator<@[EnhancedNullability] <root>.Some<T of <root>.SomeList>> [fake_override]
+    FUN FAKE_OVERRIDE name:listIterator visibility:public modality:OPEN <> ($this:kotlin.collections.List<E of kotlin.collections.List>, index:kotlin.Int) returnType:kotlin.collections.ListIterator<<root>.Some<T of <root>.SomeList>> [fake_override]
       overridden:
         public abstract fun listIterator (index: kotlin.Int): kotlin.collections.ListIterator<<root>.Some<T of <root>.MyList>> [fake_override] declared in <root>.MyList
-        public open fun listIterator (p0: kotlin.Int): @[EnhancedNullability] kotlin.collections.MutableListIterator<@[FlexibleNullability] E of java.util.ArrayList?> declared in java.util.ArrayList
+        public open fun listIterator (p0: kotlin.Int): @[EnhancedNullability] kotlin.collections.MutableListIterator<@[EnhancedNullability] E of java.util.ArrayList> declared in java.util.ArrayList
       $this: VALUE_PARAMETER name:<this> type:kotlin.collections.List<E of kotlin.collections.List>
       VALUE_PARAMETER name:index index:0 type:kotlin.Int
-    FUN FAKE_OVERRIDE name:subList visibility:public modality:OPEN <> ($this:kotlin.collections.List<E of kotlin.collections.List>, fromIndex:kotlin.Int, toIndex:kotlin.Int) returnType:kotlin.collections.List<@[EnhancedNullability] <root>.Some<T of <root>.SomeList>> [fake_override]
+    FUN FAKE_OVERRIDE name:subList visibility:public modality:OPEN <> ($this:kotlin.collections.List<E of kotlin.collections.List>, fromIndex:kotlin.Int, toIndex:kotlin.Int) returnType:kotlin.collections.List<<root>.Some<T of <root>.SomeList>> [fake_override]
       overridden:
         public abstract fun subList (fromIndex: kotlin.Int, toIndex: kotlin.Int): kotlin.collections.List<<root>.Some<T of <root>.MyList>> [fake_override] declared in <root>.MyList
         public open fun subList (p0: kotlin.Int, p1: kotlin.Int): @[EnhancedNullability] kotlin.collections.MutableList<@[EnhancedNullability] E of java.util.ArrayList> declared in java.util.ArrayList
@@ -272,12 +272,12 @@ FILE fqName:<root> fileName:/MultiList.kt
     FUN FAKE_OVERRIDE name:parallelStream visibility:public modality:OPEN <> ($this:kotlin.collections.Collection<E of kotlin.collections.Collection>) returnType:@[EnhancedNullability] java.util.stream.Stream<@[EnhancedNullability] <root>.Some<T of <root>.SomeList>> [fake_override]
       overridden:
         public open fun parallelStream (): @[EnhancedNullability] java.util.stream.Stream<@[EnhancedNullability] <root>.Some<T of <root>.MyList>> [fake_override] declared in <root>.MyList
-        public open fun parallelStream (): @[EnhancedNullability] java.util.stream.Stream<@[FlexibleNullability] E of java.util.ArrayList?> [fake_override] declared in java.util.ArrayList
+        public open fun parallelStream (): @[EnhancedNullability] java.util.stream.Stream<@[EnhancedNullability] E of java.util.ArrayList?> [fake_override] declared in java.util.ArrayList
       $this: VALUE_PARAMETER name:<this> type:kotlin.collections.Collection<E of kotlin.collections.Collection>
     FUN FAKE_OVERRIDE name:stream visibility:public modality:OPEN <> ($this:kotlin.collections.Collection<E of kotlin.collections.Collection>) returnType:@[EnhancedNullability] java.util.stream.Stream<@[EnhancedNullability] <root>.Some<T of <root>.SomeList>> [fake_override]
       overridden:
         public open fun stream (): @[EnhancedNullability] java.util.stream.Stream<@[EnhancedNullability] <root>.Some<T of <root>.MyList>> [fake_override] declared in <root>.MyList
-        public open fun stream (): @[EnhancedNullability] java.util.stream.Stream<@[FlexibleNullability] E of java.util.ArrayList?> [fake_override] declared in java.util.ArrayList
+        public open fun stream (): @[EnhancedNullability] java.util.stream.Stream<@[EnhancedNullability] E of java.util.ArrayList?> [fake_override] declared in java.util.ArrayList
       $this: VALUE_PARAMETER name:<this> type:kotlin.collections.Collection<E of kotlin.collections.Collection>
     FUN FAKE_OVERRIDE name:forEach visibility:public modality:OPEN <> ($this:kotlin.collections.Iterable<T of kotlin.collections.Iterable>, p0:@[FlexibleNullability] java.util.function.Consumer<in @[FlexibleNullability] <root>.Some<T of <root>.SomeList>?>?) returnType:kotlin.Unit [fake_override]
       overridden:
@@ -421,7 +421,7 @@ FILE fqName:<root> fileName:/MultiList.kt
       VALUE_PARAMETER name:p0 index:0 type:kotlin.collections.Collection<@[FlexibleNullability] <root>.Some<kotlin.String>?>
     FUN FAKE_OVERRIDE name:get visibility:public modality:OPEN <> ($this:kotlin.collections.List<E of kotlin.collections.List>, p0:kotlin.Int) returnType:@[EnhancedNullability] <root>.Some<kotlin.String> [fake_override,operator]
       overridden:
-        public open fun get (index: kotlin.Int): @[EnhancedNullability] <root>.Some<T of <root>.SomeList> [fake_override,operator] declared in <root>.SomeList
+        public open fun get (index: kotlin.Int): <root>.Some<T of <root>.SomeList> [fake_override,operator] declared in <root>.SomeList
       $this: VALUE_PARAMETER name:<this> type:kotlin.collections.List<E of kotlin.collections.List>
       VALUE_PARAMETER name:p0 index:0 type:kotlin.Int
     FUN FAKE_OVERRIDE name:indexOf visibility:public modality:OPEN <> ($this:kotlin.collections.List<E of kotlin.collections.List>, p0:@[EnhancedNullability] <root>.Some<kotlin.String>) returnType:kotlin.Int [fake_override]
@@ -437,7 +437,7 @@ FILE fqName:<root> fileName:/MultiList.kt
       overridden:
         public open fun iterator (): kotlin.collections.Iterator<<root>.Some<T of <root>.SomeList>> [fake_override,operator] declared in <root>.SomeList
       $this: VALUE_PARAMETER name:<this> type:kotlin.collections.List<E of kotlin.collections.List>
-    FUN FAKE_OVERRIDE name:lastIndexOf visibility:public modality:OPEN <> ($this:kotlin.collections.List<E of kotlin.collections.List>, p0:@[FlexibleNullability] <root>.Some<kotlin.String>?) returnType:kotlin.Int [fake_override]
+    FUN FAKE_OVERRIDE name:lastIndexOf visibility:public modality:OPEN <> ($this:kotlin.collections.List<E of kotlin.collections.List>, p0:@[EnhancedNullability] <root>.Some<kotlin.String>) returnType:kotlin.Int [fake_override]
       overridden:
         public open fun lastIndexOf (p0: @[EnhancedNullability] <root>.Some<T of <root>.SomeList>): kotlin.Int [fake_override] declared in <root>.SomeList
       $this: VALUE_PARAMETER name:<this> type:kotlin.collections.List<E of kotlin.collections.List>
@@ -446,14 +446,14 @@ FILE fqName:<root> fileName:/MultiList.kt
       overridden:
         public open fun listIterator (): kotlin.collections.ListIterator<<root>.Some<T of <root>.SomeList>> [fake_override] declared in <root>.SomeList
       $this: VALUE_PARAMETER name:<this> type:kotlin.collections.List<E of kotlin.collections.List>
-    FUN FAKE_OVERRIDE name:listIterator visibility:public modality:OPEN <> ($this:kotlin.collections.List<E of kotlin.collections.List>, p0:kotlin.Int) returnType:@[EnhancedNullability] kotlin.collections.MutableListIterator<@[FlexibleNullability] <root>.Some<kotlin.String>?> [fake_override]
+    FUN FAKE_OVERRIDE name:listIterator visibility:public modality:OPEN <> ($this:kotlin.collections.List<E of kotlin.collections.List>, p0:kotlin.Int) returnType:@[EnhancedNullability] kotlin.collections.MutableListIterator<@[EnhancedNullability] <root>.Some<kotlin.String>> [fake_override]
       overridden:
-        public open fun listIterator (index: kotlin.Int): kotlin.collections.ListIterator<@[EnhancedNullability] <root>.Some<T of <root>.SomeList>> [fake_override] declared in <root>.SomeList
+        public open fun listIterator (index: kotlin.Int): kotlin.collections.ListIterator<<root>.Some<T of <root>.SomeList>> [fake_override] declared in <root>.SomeList
       $this: VALUE_PARAMETER name:<this> type:kotlin.collections.List<E of kotlin.collections.List>
       VALUE_PARAMETER name:p0 index:0 type:kotlin.Int
     FUN FAKE_OVERRIDE name:subList visibility:public modality:OPEN <> ($this:kotlin.collections.List<E of kotlin.collections.List>, p0:kotlin.Int, p1:kotlin.Int) returnType:@[EnhancedNullability] kotlin.collections.MutableList<@[EnhancedNullability] <root>.Some<kotlin.String>> [fake_override]
       overridden:
-        public open fun subList (fromIndex: kotlin.Int, toIndex: kotlin.Int): kotlin.collections.List<@[EnhancedNullability] <root>.Some<T of <root>.SomeList>> [fake_override] declared in <root>.SomeList
+        public open fun subList (fromIndex: kotlin.Int, toIndex: kotlin.Int): kotlin.collections.List<<root>.Some<T of <root>.SomeList>> [fake_override] declared in <root>.SomeList
       $this: VALUE_PARAMETER name:<this> type:kotlin.collections.List<E of kotlin.collections.List>
       VALUE_PARAMETER name:p0 index:0 type:kotlin.Int
       VALUE_PARAMETER name:p1 index:1 type:kotlin.Int
