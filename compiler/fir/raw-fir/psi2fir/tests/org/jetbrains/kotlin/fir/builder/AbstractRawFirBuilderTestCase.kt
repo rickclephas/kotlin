@@ -195,8 +195,8 @@ private fun throwTwiceVisitingError(element: FirElement) {
         return
     }
     if (element is FirExpression) {
-        val psi = element.source?.psi
-        if (psi?.parent is KtPropertyDelegate || psi?.parent?.parent is KtPropertyDelegate) return
+        val psiParent = element.source?.psi?.parent
+        if (psiParent is KtPropertyDelegate || psiParent?.parent is KtPropertyDelegate) return
     }
 
     val elementDump = StringBuilder().also { element.accept(FirRenderer(it)) }.toString()
