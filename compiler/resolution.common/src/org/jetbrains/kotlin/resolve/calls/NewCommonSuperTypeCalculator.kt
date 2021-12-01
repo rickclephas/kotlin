@@ -180,7 +180,7 @@ object NewCommonSuperTypeCalculator {
         val hasStubTypesForBuilderInference = nonStubTypeVariables.size != nonTypeVariables.size
         if (hasStubTypesForBuilderInference) {
             val areAllNonStubTypesNothing = nonStubTypeVariables.isNotEmpty() && nonStubTypeVariables.all { it.isNothing() }
-            if (hasStubTypesForBuilderInference && nonStubTypeVariables.size == 1 && !areAllNonStubTypesNothing) return nonStubTypeVariables.single()
+            if (nonStubTypeVariables.size == 1 && !areAllNonStubTypesNothing) return nonStubTypeVariables.single()
 
             if (nonStubTypeVariables.isEmpty() || areAllNonStubTypesNothing) {
                 val stubTypeVariables = types.filter { it.isStubType() }
