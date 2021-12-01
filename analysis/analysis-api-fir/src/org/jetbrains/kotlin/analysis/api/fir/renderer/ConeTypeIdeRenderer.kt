@@ -84,10 +84,6 @@ internal class ConeTypeIdeRenderer(
                 append(renderType(type.original))
                 append("!!")
             }
-            is ConeStubTypeForChainInference -> {
-                renderAnnotationList(annotations)
-                append(type.constructor.variable.typeConstructor.debugName)
-            }
             else -> appendError("Unexpected cone type ${type::class.qualifiedName}")
         }
     }
