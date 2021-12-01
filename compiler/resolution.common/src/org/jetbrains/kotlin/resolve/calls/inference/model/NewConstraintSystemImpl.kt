@@ -113,7 +113,6 @@ class NewConstraintSystemImpl(
         transactionRegisterVariable(variable)
         storage.allTypeVariables.put(variable.freshTypeConstructor(), variable)
             ?.let { error("Type variable already registered: old: $it, new: $variable") }
-        storage.allTypeVariables[variable.freshTypeConstructor()] = variable
         notProperTypesCache.clear()
         storage.notFixedTypeVariables[variable.freshTypeConstructor()] = MutableVariableWithConstraints(this, variable)
     }
