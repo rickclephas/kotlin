@@ -82,11 +82,11 @@ FILE fqName:<root> fileName:/delegation2.kt
       VALUE_PARAMETER name:t index:0 type:kotlin.String
       BLOCK_BODY
         RETURN type=kotlin.Nothing from='public open fun id (t: kotlin.String): kotlin.String declared in <root>.D'
-          CALL 'public abstract fun id (t: T of <root>.A): T of <root>.A declared in <root>.A' type=kotlin.String origin=null
-            $this: GET_FIELD 'FIELD DELEGATE name:<$$delegate_0> type:<root>.A<kotlin.String> visibility:local [final]' type=<root>.A<kotlin.String> origin=null
+          CALL 'public open fun id (t: kotlin.String): kotlin.String [fake_override] declared in <root>.C' type=kotlin.String origin=null
+            $this: GET_FIELD 'FIELD DELEGATE name:<$$delegate_0> type:<root>.C visibility:local [final]' type=<root>.C origin=null
               receiver: GET_VAR '<this>: <root>.D declared in <root>.D.id' type=<root>.D origin=null
             t: GET_VAR 't: kotlin.String declared in <root>.D.id' type=kotlin.String origin=null
-    FIELD DELEGATE name:<$$delegate_0> type:<root>.A<kotlin.String> visibility:local [final]
+    FIELD DELEGATE name:<$$delegate_0> type:<root>.C visibility:local [final]
       EXPRESSION_BODY
         CONSTRUCTOR_CALL 'public constructor <init> () [primary] declared in <root>.C' type=<root>.C origin=null
     FUN FAKE_OVERRIDE name:equals visibility:public modality:OPEN <> ($this:kotlin.Any, other:kotlin.Any?) returnType:kotlin.Boolean [fake_override,operator]

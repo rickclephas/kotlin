@@ -947,7 +947,11 @@ class Fir2IrDeclarationStorage(
     fun getCachedIrField(field: FirField): IrField? = fieldCache[field]
 
     fun createIrFieldAndDelegatedMembers(field: FirField, owner: FirClass, irClass: IrClass): IrField {
-        val irField = createIrField(field, origin = IrDeclarationOrigin.DELEGATE)
+        val irField = createIrField(
+            field,
+            typeRef = field.initializer?.typeRef ?: field.returnTypeRef,
+            origin = IrDeclarationOrigin.DELEGATE
+        )
         irField.setAndModifyParent(irClass)
         components.delegatedMemberGenerator.generate(irField, field, owner, irClass)
         return irField
@@ -955,9 +959,10 @@ class Fir2IrDeclarationStorage(
 
     private fun createIrField(
         field: FirField,
+        typeRef: FirTypeRef = field.returnTypeRef,
         origin: IrDeclarationOrigin = IrDeclarationOrigin.IR_EXTERNAL_JAVA_DECLARATION_STUB
     ): IrField = convertCatching(field) {
-        val type = field.returnTypeRef.toIrType()
+        val type = typeRef.toIrType()
         return field.convertWithOffsets { startOffset, endOffset ->
             irFactory.createField(
                 startOffset, endOffset, origin, IrFieldSymbolImpl(),

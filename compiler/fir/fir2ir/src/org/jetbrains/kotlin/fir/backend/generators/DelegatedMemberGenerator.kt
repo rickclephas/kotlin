@@ -64,8 +64,8 @@ class DelegatedMemberGenerator(
 
         val subClassScope = firSubClass.unsubstitutedScope(session, scopeSession, withForcedTypeCalculator = false)
         val substitutor = createSubstitutorForSupertype(firField.returnTypeRef.coneType as ConeLookupTagBasedType, session)
-        val delegateToType = firField.initializer!!.typeRef.coneType
-        val delegateToClass = delegateToType.fullyExpandedType(session).toSymbol(session)?.fir as FirClass
+        val delegateToType = firField.initializer!!.typeRef.coneType.fullyExpandedType(session)
+        val delegateToClass = delegateToType.toSymbol(session)?.fir as FirClass
         val delegateToIrClass = classifierStorage.getIrClassSymbol(delegateToClass.symbol).owner
         val delegateToScope = delegateToClass.unsubstitutedScope(session, scopeSession, withForcedTypeCalculator = false)
         subClassScope.processAllFunctions { functionSymbol ->
@@ -93,9 +93,10 @@ class DelegatedMemberGenerator(
                 delegateToSymbol = it
             }
 
-            val member =
-                declarationStorage.getIrFunctionSymbol(delegateToSymbol ?: return@processAllFunctions).owner as? IrSimpleFunction
-                    ?: return@processAllFunctions
+            val member = declarationStorage.getIrFunctionSymbol(
+                delegateToSymbol ?: return@processAllFunctions,
+                (delegateToType as? ConeClassLikeType)?.lookupTag
+            ).owner as? IrSimpleFunction ?: return@processAllFunctions
             if (delegateToIrClass.isAnonymousObject) {
                 member.parent = delegateToIrClass
             }
@@ -128,8 +129,10 @@ class DelegatedMemberGenerator(
                 delegateToSymbol = it
             }
 
-            val member = declarationStorage.getIrPropertySymbol(delegateToSymbol ?: return@processAllProperties).owner as? IrProperty
-                ?: return@processAllProperties
+            val member = declarationStorage.getIrPropertySymbol(
+                delegateToSymbol ?: return@processAllProperties,
+                (delegateToType as? ConeClassLikeType)?.lookupTag
+            ).owner as? IrProperty ?: return@processAllProperties
             if (delegateToIrClass.isAnonymousObject) {
                 member.parent = delegateToIrClass
             }
@@ -286,8 +289,9 @@ class DelegatedMemberGenerator(
         basePropertySymbols[delegateProperty] = baseSymbols
         annotationGenerator.generate(delegateProperty, firDelegateProperty)
 
-        delegateProperty.getter!!.body = createDelegateBody(irField, delegateProperty.getter!!, superProperty.getter!!)
-        delegateProperty.getter!!.overriddenSymbols =
+        val getter = delegateProperty.getter!!
+        getter.body = createDelegateBody(irField, getter, superProperty.getter!!)
+        getter.overriddenSymbols =
             firDelegateProperty.generateOverriddenAccessorSymbols(
                 firSubClass,
                 isGetter = true,
@@ -296,14 +300,15 @@ class DelegatedMemberGenerator(
                 declarationStorage,
                 fakeOverrideGenerator
             )
-        annotationGenerator.generate(delegateProperty.getter!!, firDelegateProperty)
+        annotationGenerator.generate(getter, firDelegateProperty)
         if (delegateProperty.isVar) {
-            delegateProperty.setter!!.body = createDelegateBody(irField, delegateProperty.setter!!, superProperty.setter!!)
-            delegateProperty.setter!!.overriddenSymbols =
+            val setter = delegateProperty.setter!!
+            setter.body = createDelegateBody(irField, setter, superProperty.setter!!)
+            setter.overriddenSymbols =
                 firDelegateProperty.generateOverriddenAccessorSymbols(
                     firSubClass, isGetter = false, session, scopeSession, declarationStorage, fakeOverrideGenerator
                 )
-            annotationGenerator.generate(delegateProperty.setter!!, firDelegateProperty)
+            annotationGenerator.generate(setter, firDelegateProperty)
         }
 
         return delegateProperty

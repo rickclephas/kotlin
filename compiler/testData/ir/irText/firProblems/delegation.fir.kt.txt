@@ -31,6 +31,6 @@ class DelegateFrom : Tr {
     return <this>.#<$$delegate_0>.foo()
   }
 
-  local /* final field */ val <$$delegate_0>: Tr = DelegateTo()
+  local /* final field */ val <$$delegate_0>: DelegateTo = DelegateTo()
 
 }

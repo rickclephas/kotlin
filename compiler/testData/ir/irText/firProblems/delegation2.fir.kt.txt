@@ -36,6 +36,6 @@ class D : A<String> {
     return <this>.#<$$delegate_0>.id(t = t)
   }
 
-  local /* final field */ val <$$delegate_0>: A<String> = C()
+  local /* final field */ val <$$delegate_0>: C = C()
 
 }
