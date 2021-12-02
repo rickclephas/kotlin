@@ -2283,6 +2283,12 @@ public class Fir2IrTextTestGenerated extends AbstractFir2IrTextTest {
         }
 
         @Test
+        @TestMetadata("delegation.kt")
+        public void testDelegation() throws Exception {
+            runTest("compiler/testData/ir/irText/firProblems/delegation.kt");
+        }
+
+        @Test
         @TestMetadata("DelegationAndInheritanceFromJava.kt")
         public void testDelegationAndInheritanceFromJava() throws Exception {
             runTest("compiler/testData/ir/irText/firProblems/DelegationAndInheritanceFromJava.kt");

@@ -1,0 +1,35 @@
+// MODULE: lib
+// MODULE: main
+// FILE: delegation.kt
+
+interface Tr {
+  abstract fun foo(): String
+
+}
+
+class DelegateTo : ReturnNull, Tr {
+  constructor() /* primary */ {
+    super/*ReturnNull*/()
+    /* <init>() */
+
+  }
+
+  override fun foo(): @FlexibleNullability String? {
+    return super.foo()
+  }
+
+}
+
+class DelegateFrom : Tr {
+  constructor() /* primary */ {
+    super/*Any*/()
+    /* <init>() */
+
+  }
+
+  private /* final field */ val $$delegate_0: DelegateTo = DelegateTo()
+  override fun foo(): String {
+    return <this>.#$$delegate_0.foo() /*!! String */
+  }
+
+}

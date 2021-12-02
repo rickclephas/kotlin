@@ -1,4 +1,3 @@
-// TARGET_BACKEND: JVM
 // MODULE: lib
 // FILE: Delegation.java
 
@@ -22,13 +21,3 @@ class DelegateTo : Delegation.ReturnNull(), Tr {
 }
 
 class DelegateFrom : Tr by DelegateTo()
-
-fun box(): String {
-    try {
-        DelegateFrom().foo()
-        return "Fail: should have been an exception"
-    }
-    catch(e: NullPointerException) {
-        return "OK"
-    }
-}
