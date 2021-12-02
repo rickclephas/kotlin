@@ -170,7 +170,7 @@ private fun FirClassifierSymbol<*>.collectSuperTypes(
                                 useSiteSession,
                                 supertypeSupplier
                             )
-                            val substitutor = createSubstitutionForSupertype(it, useSiteSession)
+                            val substitutor = createSubstitutorForSupertype(it, useSiteSession)
                             substitutedTypes.mapTo(list) { superType -> substitutor.substituteOrSelf(superType) as ConeClassLikeType }
                         } else {
                             it.lookupTag.toSymbol(useSiteSession)?.collectSuperTypes(
@@ -209,7 +209,7 @@ private fun ConeClassLikeType?.isClassBasedType(
     }
 }
 
-fun createSubstitutionForSupertype(superType: ConeLookupTagBasedType, session: FirSession): ConeSubstitutor {
+fun createSubstitutorForSupertype(superType: ConeLookupTagBasedType, session: FirSession): ConeSubstitutor {
     val klass = superType.lookupTag.toSymbol(session)?.fir as? FirRegularClass ?: return ConeSubstitutor.Empty
     val arguments = superType.typeArguments.map {
         it as? ConeKotlinType ?: ConeClassErrorType(ConeSimpleDiagnostic("illegal projection usage", DiagnosticKind.IllegalProjectionUsage))

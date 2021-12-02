@@ -13,7 +13,9 @@ import org.jetbrains.kotlin.fir.declarations.utils.modality
 import org.jetbrains.kotlin.fir.isIntersectionOverride
 import org.jetbrains.kotlin.fir.isSubstitutionOverride
 import org.jetbrains.kotlin.fir.originalForSubstitutionOverride
+import org.jetbrains.kotlin.fir.resolve.createSubstitutorForSupertype
 import org.jetbrains.kotlin.fir.resolve.fullyExpandedType
+import org.jetbrains.kotlin.fir.resolve.substitution.ConeSubstitutor
 import org.jetbrains.kotlin.fir.scopes.impl.delegatedWrapperData
 import org.jetbrains.kotlin.fir.scopes.processAllFunctions
 import org.jetbrains.kotlin.fir.scopes.processAllProperties
@@ -22,10 +24,7 @@ import org.jetbrains.kotlin.fir.symbols.ConeClassLikeLookupTag
 import org.jetbrains.kotlin.fir.symbols.impl.FirCallableSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirNamedFunctionSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirPropertySymbol
-import org.jetbrains.kotlin.fir.types.ConeKotlinType
-import org.jetbrains.kotlin.fir.types.coneType
-import org.jetbrains.kotlin.fir.types.toSymbol
-import org.jetbrains.kotlin.fir.types.typeContext
+import org.jetbrains.kotlin.fir.types.*
 import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.expressions.IrBlockBody
 import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
@@ -64,6 +63,7 @@ class DelegatedMemberGenerator(
         val subClassLookupTag = firSubClass.symbol.toLookupTag()
 
         val subClassScope = firSubClass.unsubstitutedScope(session, scopeSession, withForcedTypeCalculator = false)
+        val substitutor = createSubstitutorForSupertype(firField.returnTypeRef.coneType as ConeLookupTagBasedType, session)
         val delegateToType = firField.initializer!!.typeRef.coneType
         val delegateToClass = delegateToType.fullyExpandedType(session).toSymbol(session)?.fir as FirClass
         val delegateToIrClass = classifierStorage.getIrClassSymbol(delegateToClass.symbol).owner
@@ -82,10 +82,12 @@ class DelegatedMemberGenerator(
             delegateToScope.processFunctionsByName(unwrapped.name) {
                 val delegateToReceiverType = it.resolvedReceiverTypeRef?.type
                 val subClassReceiverType = unwrapped.receiverTypeRef?.coneType
-                if (!equalNullableTypes(delegateToReceiverType, subClassReceiverType)) return@processFunctionsByName
+                if (!equalNullableTypes(delegateToReceiverType, subClassReceiverType, substitutor)) return@processFunctionsByName
                 if (it.valueParameterSymbols.size != unwrapped.valueParameters.size) return@processFunctionsByName
                 if (it.valueParameterSymbols.zip(unwrapped.valueParameters).any { (delegateToParameterSymbol, subClassParameter) ->
-                        !equalTypes(delegateToParameterSymbol.resolvedReturnTypeRef.type, subClassParameter.returnTypeRef.coneType)
+                        val delegateToParameterType = delegateToParameterSymbol.resolvedReturnTypeRef.type
+                        val subClassParameterType = subClassParameter.returnTypeRef.coneType
+                        !equalTypes(delegateToParameterType, subClassParameterType, substitutor)
                     }
                 ) return@processFunctionsByName
                 delegateToSymbol = it
@@ -122,7 +124,7 @@ class DelegatedMemberGenerator(
                 if (it !is FirPropertySymbol) return@processPropertiesByName
                 val delegateToReceiverType = it.resolvedReceiverTypeRef?.type
                 val subClassReceiverType = unwrapped.receiverTypeRef?.coneType
-                if (!equalNullableTypes(delegateToReceiverType, subClassReceiverType)) return@processPropertiesByName
+                if (!equalNullableTypes(delegateToReceiverType, subClassReceiverType, substitutor)) return@processPropertiesByName
                 delegateToSymbol = it
             }
 
@@ -140,14 +142,15 @@ class DelegatedMemberGenerator(
         }
     }
 
-    private fun equalNullableTypes(first: ConeKotlinType?, second: ConeKotlinType?): Boolean {
+    private fun equalNullableTypes(first: ConeKotlinType?, second: ConeKotlinType?, substitutor: ConeSubstitutor): Boolean {
         if ((first == null) != (second == null)) return false
-        if (first != null && second != null && !AbstractTypeChecker.equalTypes(session.typeContext, first, second)) return false
+        if (first != null && second != null && !equalTypes(first, second, substitutor)) return false
         return true
     }
 
-    private fun equalTypes(first: ConeKotlinType, second: ConeKotlinType): Boolean {
-        return AbstractTypeChecker.equalTypes(session.typeContext, first, second)
+    private fun equalTypes(first: ConeKotlinType, second: ConeKotlinType, substitutor: ConeSubstitutor): Boolean {
+        return AbstractTypeChecker.equalTypes(session.typeContext, first, second) ||
+                AbstractTypeChecker.equalTypes(session.typeContext, first, substitutor.substituteOrSelf(second))
     }
 
     private fun shouldSkipDelegationFor(unwrapped: FirCallableDeclaration): Boolean {

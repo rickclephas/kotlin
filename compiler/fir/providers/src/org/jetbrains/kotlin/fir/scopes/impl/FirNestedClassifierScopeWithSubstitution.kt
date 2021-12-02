@@ -7,7 +7,7 @@ package org.jetbrains.kotlin.fir.scopes.impl
 
 import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.declarations.utils.isInner
-import org.jetbrains.kotlin.fir.resolve.createSubstitutionForSupertype
+import org.jetbrains.kotlin.fir.resolve.createSubstitutorForSupertype
 import org.jetbrains.kotlin.fir.resolve.substitution.ConeSubstitutor
 import org.jetbrains.kotlin.fir.scopes.FirContainingNamesAwareScope
 import org.jetbrains.kotlin.fir.scopes.getSingleClassifier
@@ -53,6 +53,6 @@ fun FirContainingNamesAwareScope.wrapNestedClassifierScopeWithSubstitutionForSup
     superType: ConeClassLikeType,
     session: FirSession
 ): FirContainingNamesAwareScope {
-    val substitutor = createSubstitutionForSupertype(superType, session)
+    val substitutor = createSubstitutorForSupertype(superType, session)
     return FirNestedClassifierScopeWithSubstitution(this, substitutor)
 }
