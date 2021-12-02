@@ -6,10 +6,14 @@
 package org.jetbrains.kotlin.fir.backend.generators
 
 import org.jetbrains.kotlin.descriptors.Modality
-import org.jetbrains.kotlin.fir.*
 import org.jetbrains.kotlin.fir.backend.*
+import org.jetbrains.kotlin.fir.baseForIntersectionOverride
 import org.jetbrains.kotlin.fir.declarations.*
 import org.jetbrains.kotlin.fir.declarations.utils.modality
+import org.jetbrains.kotlin.fir.isIntersectionOverride
+import org.jetbrains.kotlin.fir.isSubstitutionOverride
+import org.jetbrains.kotlin.fir.originalForSubstitutionOverride
+import org.jetbrains.kotlin.fir.resolve.fullyExpandedType
 import org.jetbrains.kotlin.fir.scopes.impl.delegatedWrapperData
 import org.jetbrains.kotlin.fir.scopes.processAllFunctions
 import org.jetbrains.kotlin.fir.scopes.processAllProperties
@@ -18,6 +22,10 @@ import org.jetbrains.kotlin.fir.symbols.ConeClassLikeLookupTag
 import org.jetbrains.kotlin.fir.symbols.impl.FirCallableSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirNamedFunctionSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirPropertySymbol
+import org.jetbrains.kotlin.fir.types.ConeKotlinType
+import org.jetbrains.kotlin.fir.types.coneType
+import org.jetbrains.kotlin.fir.types.toSymbol
+import org.jetbrains.kotlin.fir.types.typeContext
 import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.expressions.IrBlockBody
 import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
@@ -27,9 +35,11 @@ import org.jetbrains.kotlin.ir.expressions.impl.IrReturnImpl
 import org.jetbrains.kotlin.ir.types.classifierOrNull
 import org.jetbrains.kotlin.ir.types.isNothing
 import org.jetbrains.kotlin.ir.types.isUnit
+import org.jetbrains.kotlin.ir.util.isAnonymousObject
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.JvmNames.JVM_DEFAULT_CLASS_ID
+import org.jetbrains.kotlin.types.AbstractTypeChecker
 
 /**
  * A generator for delegated members from implementation by delegation.
@@ -53,21 +63,40 @@ class DelegatedMemberGenerator(
     fun generate(irField: IrField, firField: FirField, firSubClass: FirClass, subClass: IrClass) {
         val subClassLookupTag = firSubClass.symbol.toLookupTag()
 
-        val subClassScope = firSubClass.unsubstitutedScope(session, scopeSession, withForcedTypeCalculator = true)
+        val subClassScope = firSubClass.unsubstitutedScope(session, scopeSession, withForcedTypeCalculator = false)
+        val delegateToType = firField.initializer!!.typeRef.coneType
+        val delegateToClass = delegateToType.fullyExpandedType(session).toSymbol(session)?.fir as FirClass
+        val delegateToIrClass = classifierStorage.getIrClassSymbol(delegateToClass.symbol).owner
+        val delegateToScope = delegateToClass.unsubstitutedScope(session, scopeSession, withForcedTypeCalculator = false)
         subClassScope.processAllFunctions { functionSymbol ->
             val unwrapped =
                 functionSymbol
                     .unwrapDelegateTarget(subClassLookupTag, firField)
                     ?: return@processAllFunctions
 
-            val member =
-                declarationStorage.getIrFunctionSymbol(unwrapped.symbol).owner as? IrSimpleFunction
-                    ?: return@processAllFunctions
-
             if (shouldSkipDelegationFor(unwrapped)) {
                 return@processAllFunctions
             }
 
+            var delegateToSymbol: FirNamedFunctionSymbol? = null
+            delegateToScope.processFunctionsByName(unwrapped.name) {
+                val delegateToReceiverType = it.resolvedReceiverTypeRef?.type
+                val subClassReceiverType = unwrapped.receiverTypeRef?.coneType
+                if (!equalNullableTypes(delegateToReceiverType, subClassReceiverType)) return@processFunctionsByName
+                if (it.valueParameterSymbols.size != unwrapped.valueParameters.size) return@processFunctionsByName
+                if (it.valueParameterSymbols.zip(unwrapped.valueParameters).any { (delegateToParameterSymbol, subClassParameter) ->
+                        !equalTypes(delegateToParameterSymbol.resolvedReturnTypeRef.type, subClassParameter.returnTypeRef.coneType)
+                    }
+                ) return@processFunctionsByName
+                delegateToSymbol = it
+            }
+
+            val member =
+                declarationStorage.getIrFunctionSymbol(delegateToSymbol ?: return@processAllFunctions).owner as? IrSimpleFunction
+                    ?: return@processAllFunctions
+            if (delegateToIrClass.isAnonymousObject) {
+                member.parent = delegateToIrClass
+            }
             val irSubFunction = generateDelegatedFunction(
                 subClass, firSubClass, irField, member, functionSymbol.fir
             )
@@ -84,13 +113,24 @@ class DelegatedMemberGenerator(
                     .unwrapDelegateTarget(subClassLookupTag, firField)
                     ?: return@processAllProperties
 
-            val member = declarationStorage.getIrPropertySymbol(unwrapped.symbol).owner as? IrProperty
-                ?: return@processAllProperties
-
             if (shouldSkipDelegationFor(unwrapped)) {
                 return@processAllProperties
             }
 
+            var delegateToSymbol: FirPropertySymbol? = null
+            delegateToScope.processPropertiesByName(unwrapped.name) {
+                if (it !is FirPropertySymbol) return@processPropertiesByName
+                val delegateToReceiverType = it.resolvedReceiverTypeRef?.type
+                val subClassReceiverType = unwrapped.receiverTypeRef?.coneType
+                if (!equalNullableTypes(delegateToReceiverType, subClassReceiverType)) return@processPropertiesByName
+                delegateToSymbol = it
+            }
+
+            val member = declarationStorage.getIrPropertySymbol(delegateToSymbol ?: return@processAllProperties).owner as? IrProperty
+                ?: return@processAllProperties
+            if (delegateToIrClass.isAnonymousObject) {
+                member.parent = delegateToIrClass
+            }
             val irSubProperty = generateDelegatedProperty(
                 subClass, firSubClass, irField, member, propertySymbol.fir
             )
@@ -98,6 +138,16 @@ class DelegatedMemberGenerator(
             declarationStorage.cacheDelegatedProperty(propertySymbol.fir, irSubProperty)
             subClass.addMember(irSubProperty)
         }
+    }
+
+    private fun equalNullableTypes(first: ConeKotlinType?, second: ConeKotlinType?): Boolean {
+        if ((first == null) != (second == null)) return false
+        if (first != null && second != null && !AbstractTypeChecker.equalTypes(session.typeContext, first, second)) return false
+        return true
+    }
+
+    private fun equalTypes(first: ConeKotlinType, second: ConeKotlinType): Boolean {
+        return AbstractTypeChecker.equalTypes(session.typeContext, first, second)
     }
 
     private fun shouldSkipDelegationFor(unwrapped: FirCallableDeclaration): Boolean {

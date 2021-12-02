@@ -61,7 +61,7 @@ FILE fqName:<root> fileName:/delegation.kt
       $this: VALUE_PARAMETER name:<this> type:<root>.DelegateFrom
       BLOCK_BODY
         RETURN type=kotlin.Nothing from='public open fun foo (): kotlin.String declared in <root>.DelegateFrom'
-          CALL 'public abstract fun foo (): kotlin.String declared in <root>.Tr' type=kotlin.String origin=null
+          CALL 'public final fun foo (): @[FlexibleNullability] kotlin.String? declared in <root>.DelegateTo' type=kotlin.String origin=null
             $this: GET_FIELD 'FIELD DELEGATE name:<$$delegate_0> type:<root>.Tr visibility:local [final]' type=<root>.Tr origin=null
               receiver: GET_VAR '<this>: <root>.DelegateFrom declared in <root>.DelegateFrom.foo' type=<root>.DelegateFrom origin=null
     FIELD DELEGATE name:<$$delegate_0> type:<root>.Tr visibility:local [final]
