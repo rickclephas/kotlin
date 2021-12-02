@@ -1746,6 +1746,11 @@ public class KlibTextTestCaseGenerated extends AbstractKlibTextTestCase {
             runTest("compiler/testData/ir/irText/firProblems/delegation.kt");
         }
 
+        @TestMetadata("delegation2.kt")
+        public void testDelegation2() throws Exception {
+            runTest("compiler/testData/ir/irText/firProblems/delegation2.kt");
+        }
+
         @TestMetadata("deprecated.kt")
         public void testDeprecated() throws Exception {
             runTest("compiler/testData/ir/irText/firProblems/deprecated.kt");

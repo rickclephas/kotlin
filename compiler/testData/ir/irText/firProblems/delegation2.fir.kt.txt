@@ -1,0 +1,41 @@
+interface A<T : Any?> {
+  abstract fun id(t: T): T
+
+}
+
+open class B : A<String> {
+  constructor() /* primary */ {
+    super/*Any*/()
+    /* <init>() */
+
+  }
+
+  override fun id(t: String): String {
+    return t
+  }
+
+}
+
+class C : B {
+  constructor() /* primary */ {
+    super/*B*/()
+    /* <init>() */
+
+  }
+
+}
+
+class D : A<String> {
+  constructor() /* primary */ {
+    super/*Any*/()
+    /* <init>() */
+
+  }
+
+  override fun id(t: String): String {
+    return <this>.#<$$delegate_0>.id(t = t)
+  }
+
+  local /* final field */ val <$$delegate_0>: A<String> = C()
+
+}

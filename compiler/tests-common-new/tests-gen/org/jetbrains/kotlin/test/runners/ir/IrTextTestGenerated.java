@@ -2289,6 +2289,12 @@ public class IrTextTestGenerated extends AbstractIrTextTest {
         }
 
         @Test
+        @TestMetadata("delegation2.kt")
+        public void testDelegation2() throws Exception {
+            runTest("compiler/testData/ir/irText/firProblems/delegation2.kt");
+        }
+
+        @Test
         @TestMetadata("DelegationAndInheritanceFromJava.kt")
         public void testDelegationAndInheritanceFromJava() throws Exception {
             runTest("compiler/testData/ir/irText/firProblems/DelegationAndInheritanceFromJava.kt");
