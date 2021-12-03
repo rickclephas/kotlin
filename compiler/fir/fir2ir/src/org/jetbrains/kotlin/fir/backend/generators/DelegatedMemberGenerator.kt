@@ -22,6 +22,7 @@ import org.jetbrains.kotlin.fir.symbols.impl.FirNamedFunctionSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirPropertySymbol
 import org.jetbrains.kotlin.fir.types.ConeClassLikeType
 import org.jetbrains.kotlin.fir.types.coneType
+import org.jetbrains.kotlin.fir.types.lowerBoundIfFlexible
 import org.jetbrains.kotlin.fir.types.toSymbol
 import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.expressions.IrBlockBody
@@ -97,7 +98,7 @@ class DelegatedMemberGenerator(
         val subClassLookupTag = firSubClass.symbol.toLookupTag()
 
         val subClassScope = firSubClass.unsubstitutedScope(session, scopeSession, withForcedTypeCalculator = false)
-        val delegateToType = firField.initializer!!.typeRef.coneType.fullyExpandedType(session)
+        val delegateToType = firField.initializer!!.typeRef.coneType.fullyExpandedType(session).lowerBoundIfFlexible()
         val delegateToClass = delegateToType.toSymbol(session)?.fir as FirClass
         val delegateToScope = delegateToClass.unsubstitutedScope(session, scopeSession, withForcedTypeCalculator = false)
         val delegateToLookupTag = (delegateToType as? ConeClassLikeType)?.lookupTag
