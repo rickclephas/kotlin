@@ -6,13 +6,10 @@
 package org.jetbrains.kotlin.fir.backend.generators
 
 import org.jetbrains.kotlin.descriptors.Modality
+import org.jetbrains.kotlin.fir.*
 import org.jetbrains.kotlin.fir.backend.*
-import org.jetbrains.kotlin.fir.baseForIntersectionOverride
 import org.jetbrains.kotlin.fir.declarations.*
 import org.jetbrains.kotlin.fir.declarations.utils.modality
-import org.jetbrains.kotlin.fir.isIntersectionOverride
-import org.jetbrains.kotlin.fir.isSubstitutionOverride
-import org.jetbrains.kotlin.fir.originalForSubstitutionOverride
 import org.jetbrains.kotlin.fir.resolve.fullyExpandedType
 import org.jetbrains.kotlin.fir.scopes.*
 import org.jetbrains.kotlin.fir.scopes.impl.delegatedWrapperData
@@ -93,13 +90,25 @@ class DelegatedMemberGenerator(
         bodiesInfo.clear()
     }
 
+    private fun FirTypeParameter.boundClass(): FirClass {
+        val boundType = bounds.first().coneType.fullyExpandedType(session).lowerBoundIfFlexible()
+        val boundClassifier = boundType.toSymbol(session)!!.fir
+        if (boundClassifier is FirClass) return boundClassifier
+        return (boundClassifier as FirTypeParameter).boundClass()
+    }
+
     // Generate delegated members for [subClass]. The synthetic field [irField] has the super interface type.
     fun generate(irField: IrField, firField: FirField, firSubClass: FirClass, subClass: IrClass) {
         val subClassLookupTag = firSubClass.symbol.toLookupTag()
 
         val subClassScope = firSubClass.unsubstitutedScope(session, scopeSession, withForcedTypeCalculator = false)
         val delegateToType = firField.initializer!!.typeRef.coneType.fullyExpandedType(session).lowerBoundIfFlexible()
-        val delegateToClass = delegateToType.toSymbol(session)?.fir as FirClass
+        val delegateToClass = when (val fir = delegateToType.toSymbol(session)?.fir) {
+            is FirClass -> fir
+            is FirTypeParameter -> fir.boundClass()
+            else -> throw AssertionError("${fir?.render()}")
+        }
+
         val delegateToScope = delegateToClass.unsubstitutedScope(session, scopeSession, withForcedTypeCalculator = false)
         val delegateToLookupTag = (delegateToType as? ConeClassLikeType)?.lookupTag
 
