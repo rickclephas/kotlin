@@ -10,6 +10,7 @@ import org.jetbrains.kotlin.generators.model.annotation
 import org.jetbrains.kotlin.konan.blackboxtest.AbstractNativeBlackBoxTest
 import org.jetbrains.kotlin.konan.blackboxtest.support.group.UseExtTestCaseGroupProvider
 import org.jetbrains.kotlin.konan.blackboxtest.support.group.UseStandardTestCaseGroupProvider
+import org.junit.jupiter.api.Tag
 
 fun main() {
     System.setProperty("java.awt.headless", "true")
@@ -19,7 +20,7 @@ fun main() {
         testGroup("native/native.tests/tests-gen", "compiler/testData") {
             testClass<AbstractNativeBlackBoxTest>(
                 suiteTestClassName = "NativeExtBlackBoxTestGenerated",
-                annotations = listOf(annotation(UseExtTestCaseGroupProvider::class.java))
+                annotations = listOf(daily(), provider<UseExtTestCaseGroupProvider>())
             ) {
                 model("codegen/box")
                 model("codegen/boxInline")
@@ -29,7 +30,7 @@ fun main() {
         // Samples (how to utilize abilities of new test infrastructure).
         testGroup("native/native.tests/tests-gen", "native/native.tests/testData") {
             testClass<AbstractNativeBlackBoxTest>(
-                annotations = listOf(annotation(UseStandardTestCaseGroupProvider::class.java))
+                annotations = listOf(daily(), provider<UseStandardTestCaseGroupProvider>())
             ) {
                 model("samples")
                 model("samples2")
@@ -37,3 +38,6 @@ fun main() {
         }
     }
 }
+
+private inline fun <reified T : Annotation> provider() = annotation(T::class.java)
+private fun daily() = annotation(Tag::class.java, "daily")
