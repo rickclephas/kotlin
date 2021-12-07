@@ -21,6 +21,7 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinMultiplatformPlugin
 import org.jetbrains.kotlin.gradle.plugin.statistics.KotlinBuildStatsService
 import org.jetbrains.kotlin.gradle.targets.js.dukat.ExternalsOutputFormat
 import org.jetbrains.kotlin.gradle.targets.js.dukat.ExternalsOutputFormat.Companion.externalsOutputFormatProperty
+import org.jetbrains.kotlin.gradle.targets.js.ir.KotlinJsIrCompilationOutputMode
 import org.jetbrains.kotlin.gradle.targets.js.webpack.WebpackMajorVersion
 import org.jetbrains.kotlin.gradle.targets.native.DisabledNativeTargetsReporter
 import org.jetbrains.kotlin.gradle.tasks.*
@@ -102,6 +103,10 @@ internal class PropertiesProvider private constructor(private val project: Proje
 
     val incrementalJsIr: Boolean
         get() = booleanProperty("kotlin.incremental.js.ir") ?: false
+
+    val jsIrCompilationOutputMode: KotlinJsIrCompilationOutputMode
+        get() = property("kotlin.js.ir.compilation.output.mode")?.let { KotlinJsIrCompilationOutputMode.byArgument(it) }
+            ?: KotlinJsIrCompilationOutputMode.PER_MODULE
 
     val incrementalMultiplatform: Boolean?
         get() = booleanProperty("kotlin.incremental.multiplatform")

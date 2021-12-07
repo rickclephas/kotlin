@@ -70,8 +70,15 @@ abstract class KotlinJsIrLink @Inject constructor(
     @get:Internal
     internal lateinit var compilation: KotlinCompilationData<*>
 
+    @Transient
+    @get:Internal
+    internal val propertiesProvider = PropertiesProvider(project)
+
     @get:Input
-    internal val incrementalJsIr: Boolean = PropertiesProvider(project).incrementalJsIr
+    internal val incrementalJsIr: Boolean = propertiesProvider.incrementalJsIr
+
+    @get:Input
+    val compilationOutputMode: KotlinJsIrCompilationOutputMode = propertiesProvider.jsIrCompilationOutputMode
 
     // Link tasks are not affected by compiler plugin
     override val pluginClasspath: ConfigurableFileCollection = project.objects.fileCollection()
@@ -176,6 +183,16 @@ abstract class KotlinJsIrLink @Inject constructor(
             DEVELOPMENT -> {
                 kotlinOptions.configureOptions(GENERATE_D_TS)
             }
+        }
+        var alreadyDefinedOutputMode = false
+        kotlinOptions.freeCompilerArgs = kotlinOptions.freeCompilerArgs
+            .onEach {
+                if (it.startsWith(PER_MODULE)) {
+                    alreadyDefinedOutputMode = true
+                }
+            }
+        if (!alreadyDefinedOutputMode) {
+            kotlinOptions.freeCompilerArgs += compilationOutputMode.toCompilerArgument()
         }
         super.setupCompilerArgs(args, defaultsOnly, ignoreClasspathResolutionErrors)
     }
