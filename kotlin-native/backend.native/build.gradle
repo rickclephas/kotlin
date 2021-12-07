@@ -76,6 +76,9 @@ kotlinNativeInterop {
         }
 
         pkg 'org.jetbrains.kotlin.backend.konan.env'
+
+        compilerOpts '-fno-optimize-sibling-calls'
+        linkerOpts '-fno-optimize-sibling-calls'
     }
 }
 

@@ -13,6 +13,8 @@ bitcode {
     }
     create("env"){
         dependsOn(":kotlin-native:dependencies:update")
+
+        compilerArgs.add("-fno-optimize-sibling-calls")
     }
 }
 
