@@ -35,7 +35,11 @@ internal class GTestLogger : TestLoggerWithStatistics() {
             println("\n$failed FAILED TESTS")
         }
         if (ignored != 0) {
-            println("YOU HAVE $ignored DISABLED TEST(S)")
+            val testsAmount = if (ignored == 1) "1 test" else "$ignored tests"
+            println("[  SKIPPED ] $testsAmount, listed below:")
+            ignoredTests.forEach {
+                println("[  SKIPPED ] ${it.prettyName}")
+            }
         }
     }
 
