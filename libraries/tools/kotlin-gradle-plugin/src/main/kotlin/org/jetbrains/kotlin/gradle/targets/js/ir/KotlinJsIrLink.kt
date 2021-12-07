@@ -41,6 +41,7 @@ import org.jetbrains.kotlin.gradle.utils.getCacheDirectory
 import org.jetbrains.kotlin.gradle.utils.getDependenciesCacheDirectories
 import org.jetbrains.kotlin.gradle.utils.getValue
 import org.jetbrains.kotlin.statistics.metrics.BooleanMetrics
+import org.jetbrains.kotlin.statistics.metrics.StringMetrics
 import java.io.File
 import javax.inject.Inject
 
@@ -186,12 +187,25 @@ abstract class KotlinJsIrLink @Inject constructor(
         }
         var alreadyDefinedOutputMode = false
         kotlinOptions.freeCompilerArgs = kotlinOptions.freeCompilerArgs
-            .onEach {
-                if (it.startsWith(PER_MODULE)) {
+            .onEach { arg: String ->
+                if (arg.startsWith(PER_MODULE)) {
+                    KotlinBuildStatsService.applyIfInitialised {
+                        it.report(
+                            StringMetrics.JS_COMPILATION_OUTPUT_MODE,
+                            if (arg.endsWith("true")) {
+                                KotlinJsIrCompilationOutputMode.PER_MODULE.name
+                            } else {
+                                KotlinJsIrCompilationOutputMode.WHOLE_PROGRAM.name
+                            }
+                        )
+                    }
                     alreadyDefinedOutputMode = true
                 }
             }
         if (!alreadyDefinedOutputMode) {
+            KotlinBuildStatsService.applyIfInitialised {
+                it.report(StringMetrics.JS_COMPILATION_OUTPUT_MODE, compilationOutputMode.name)
+            }
             kotlinOptions.freeCompilerArgs += compilationOutputMode.toCompilerArgument()
         }
         super.setupCompilerArgs(args, defaultsOnly, ignoreClasspathResolutionErrors)
