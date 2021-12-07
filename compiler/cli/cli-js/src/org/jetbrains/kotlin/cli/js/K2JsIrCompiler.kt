@@ -407,7 +407,7 @@ class K2JsIrCompiler : CLICompiler<K2JSCompilerArguments>() {
                         fullJs = true,
                         dceJs = arguments.irDce,
                         multiModule = arguments.irPerModule,
-                        relativeRequirePath = false,
+                        relativeRequirePath = true,
                     )
 
                     transformer.generateModule(ir.allModules)
@@ -418,7 +418,7 @@ class K2JsIrCompiler : CLICompiler<K2JSCompilerArguments>() {
                         fullJs = true,
                         dceJs = arguments.irDce,
                         multiModule = arguments.irPerModule,
-                        relativeRequirePath = false,
+                        relativeRequirePath = true,
                     )
 
                     transformer.generateModule(ir.allModules)
