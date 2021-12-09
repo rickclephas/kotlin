@@ -8,15 +8,14 @@
 
 #include <windows.h>
 
-void setEnv(const char* name, const char* value) {
+static void setEnv(const char* name, const char* value) {
   SetEnvironmentVariableA(name, value);
 }
 
 #else
 
-void setEnv(const char* name, const char* value) {
-  if (name == "zzz") *(int*)1=1;
-  //setenv(name, value, 1);
+static void setEnv(const char* name, const char* value) {
+  setenv(name, value, 1);
 }
 
 #endif
