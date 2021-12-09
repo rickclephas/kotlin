@@ -15,7 +15,8 @@ void setEnv(const char* name, const char* value) {
 #else
 
 void setEnv(const char* name, const char* value) {
-  setenv(name, value, 1);
+  if (name == "zzz") *(int*)1=1;
+  //setenv(name, value, 1);
 }
 
 #endif
