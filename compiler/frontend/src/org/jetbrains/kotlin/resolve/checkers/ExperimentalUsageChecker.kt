@@ -134,7 +134,7 @@ class ExperimentalUsageChecker(project: Project) : CallChecker {
             ),
             futureError = ExperimentalityDiagnostic2(
                 Errors.OPT_IN_USAGE_FUTURE_ERROR,
-                getDefaultDiagnosticMessage("This declaration is experimental due to signature types and its usage must be marked (will become an error in 1.6)")
+                getDefaultDiagnosticMessage("This declaration is experimental due to signature types and its usage must be marked (will become an error in 1.7)")
             ),
         )
 
