@@ -103,8 +103,6 @@ val JvmScriptCompilationConfigurationKeys.jdkHome
 
 val JvmScriptCompilationConfigurationKeys.jvmTarget by PropertiesCollection.key<String>()
 
-val JvmScriptCompilationConfigurationKeys.getJvmTargetFromClass by PropertiesCollection.key(KotlinType("java.lang.String"))
-
 @Suppress("unused")
 val ScriptCompilationConfigurationKeys.jvm
     get() = JvmScriptCompilationConfigurationBuilder()

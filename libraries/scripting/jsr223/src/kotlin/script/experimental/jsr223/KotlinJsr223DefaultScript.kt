@@ -14,7 +14,6 @@ import kotlin.script.experimental.api.ScriptCompilationConfiguration
 import kotlin.script.experimental.api.ScriptEvaluationConfiguration
 import kotlin.script.experimental.api.refineConfiguration
 import kotlin.script.experimental.api.refineConfigurationBeforeEvaluate
-import kotlin.script.experimental.jvm.getJvmTargetFromClass
 import kotlin.script.experimental.jvm.jvm
 import kotlin.script.experimental.jvm.jvmTarget
 import kotlin.script.experimental.jvmhost.jsr223.configureProvidedPropertiesFromJsr223Context
@@ -70,7 +69,9 @@ object KotlinJsr223DefaultScriptCompilationConfiguration : ScriptCompilationConf
             importAllBindings(true)
         }
         jvm {
-            getJvmTargetFromClass("java.lang.String")
+            System.getProperty("java.specification.version")?.let {
+                jvmTarget(it)
+            }
         }
     }
 )
