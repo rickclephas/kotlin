@@ -14,7 +14,6 @@ class JsPolyfillsVisitor {
     private val polyfills = mutableSetOf<String>()
 
     fun visitDeclaration(declaration: IrDeclaration) {
-        if (!declaration.isEffectivelyExternal()) return
         val implementation = declaration.getJsNativeImplementation() ?: return
         polyfills.add(implementation)
     }
