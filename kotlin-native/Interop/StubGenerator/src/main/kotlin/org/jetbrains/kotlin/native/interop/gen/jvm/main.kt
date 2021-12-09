@@ -17,6 +17,7 @@
 package org.jetbrains.kotlin.native.interop.gen.jvm
 
 import kotlinx.cinterop.usingJvmCInteropCallbacks
+import kotlinx.cinterop.setEnv
 import org.jetbrains.kotlin.konan.TempFiles
 import org.jetbrains.kotlin.konan.exec.Command
 import org.jetbrains.kotlin.konan.util.DefFile
@@ -466,7 +467,11 @@ private fun resolveDependencies(
 
 internal fun prepareTool(target: String?, flavor: KotlinPlatform, runFromDaemon: Boolean, propertyOverrides: Map<String, String> = emptyMap()) =
         ToolConfig(target, flavor, propertyOverrides).also {
-            if (!runFromDaemon) it.prepare() // Daemon prepares the tool himself. (See KonanToolRunner.kt)
+            if (runFromDaemon) {
+                setEnv("LIBCLANG_DISABLE_CRASH_RECOVERY", "1") // For in-process invocation have to setup proper environment manually.
+            } else {
+                it.prepare() // Daemon prepares the tool himself. (See KonanToolRunner.kt)
+            }
         }
 
 internal fun buildNativeLibrary(

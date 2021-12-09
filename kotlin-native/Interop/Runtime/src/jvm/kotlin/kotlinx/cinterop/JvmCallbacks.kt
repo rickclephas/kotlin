@@ -532,3 +532,11 @@ private val unsafe = with(Unsafe::class.java.getDeclaredField("theUnsafe")) {
 private external fun newGlobalRef(any: Any): Long
 private external fun derefGlobalRef(ref: Long): Any
 private external fun deleteGlobalRef(ref: Long)
+
+private external fun setEnv(name: Long, value: Long)
+
+fun setEnv(name: String, value: String) {
+    memScoped {
+        setEnv(name.cstr.getPointer(memScope).rawValue, value.cstr.getPointer(memScope).rawValue)
+    }
+}
