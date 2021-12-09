@@ -51,7 +51,8 @@ public:
         using ObjectData = SameThreadMarkAndSweep::ObjectData;
         using Allocator = AllocatorWithGC<AlignedAllocator, ThreadData>;
 
-        explicit ThreadData(SameThreadMarkAndSweep& gc, mm::ThreadData& threadData) noexcept : gc_(gc), threadData_(threadData) {}
+        ThreadData(SameThreadMarkAndSweep& gc, mm::ThreadData& threadData, GCSchedulerThreadData& gcScheduler) noexcept :
+            gc_(gc), threadData_(threadData), gcScheduler_(gcScheduler) {}
         ~ThreadData() = default;
 
         void SafePointFunctionPrologue() noexcept;
@@ -71,11 +72,12 @@ public:
 
         SameThreadMarkAndSweep& gc_;
         mm::ThreadData& threadData_;
+        GCSchedulerThreadData& gcScheduler_;
     };
 
     using Allocator = ThreadData::Allocator;
 
-    SameThreadMarkAndSweep() noexcept;
+    SameThreadMarkAndSweep(mm::ObjectFactory<SameThreadMarkAndSweep>& objectFactory, GCScheduler& gcScheduler) noexcept;
     ~SameThreadMarkAndSweep() = default;
 
 private:
@@ -84,6 +86,9 @@ private:
 
     size_t epoch_ = 0;
     uint64_t lastGCTimestampUs_ = 0;
+
+    mm::ObjectFactory<SameThreadMarkAndSweep>& objectFactory_;
+    GCScheduler& gcScheduler_;
 };
 
 } // namespace gc
