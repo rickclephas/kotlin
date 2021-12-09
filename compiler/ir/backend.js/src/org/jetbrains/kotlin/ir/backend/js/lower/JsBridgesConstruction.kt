@@ -29,7 +29,7 @@ class JsBridgesConstruction(context: JsIrBackendContext) : BridgesConstruction<J
                 function.valueParameters.map { it.type.eraseGenerics(context.irBuiltIns) },
                 function.returnType.takeIf {
                     it.getJsInlinedClass() != null || it.isUnit()
-                }
+                }?.eraseGenerics(context.irBuiltIns)
             )
         }
 

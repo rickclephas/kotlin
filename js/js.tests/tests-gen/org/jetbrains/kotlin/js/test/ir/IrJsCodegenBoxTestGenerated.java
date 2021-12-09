@@ -1559,6 +1559,12 @@ public class IrJsCodegenBoxTestGenerated extends AbstractIrJsCodegenBoxTest {
         }
 
         @Test
+        @TestMetadata("overrideWithValueClassReturn.kt")
+        public void testOverrideWithValueClassReturn() throws Exception {
+            runTest("compiler/testData/codegen/box/bridges/overrideWithValueClassReturn.kt");
+        }
+
+        @Test
         @TestMetadata("propertyAccessorsWithoutBody.kt")
         public void testPropertyAccessorsWithoutBody() throws Exception {
             runTest("compiler/testData/codegen/box/bridges/propertyAccessorsWithoutBody.kt");
