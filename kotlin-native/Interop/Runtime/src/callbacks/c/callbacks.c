@@ -20,10 +20,10 @@
 //
 //#endif
 
-JNIEXPORT void JNICALL Java_kotlinx_cinterop_JvmCallbacksKt_setEnv(JNIEnv* jniEnv, jclass jclss, jlong p0, jlong p1) {
-    if (p0 == 123456789) *(int*)1=1;
-    //setEnv((char*)p0, (char*)p1);
-}
+//JNIEXPORT void JNICALL Java_kotlinx_cinterop_JvmCallbacksKt_setEnv(JNIEnv* jniEnv, jclass jclss, jlong p0, jlong p1) {
+//    if (p0 == 123456789) *(int*)1=1;
+//    //setEnv((char*)p0, (char*)p1);
+//}
 
 /*
  * Class:     kotlinx_cinterop_JvmCallbacksKt
