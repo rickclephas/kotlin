@@ -5253,6 +5253,12 @@ public class IrBoxJsTestGenerated extends AbstractIrBoxJsTest {
         }
 
         @Test
+        @TestMetadata("multipleCallableReferenceUsage.kt")
+        public void testMultipleCallableReferenceUsage() throws Exception {
+            runTest("js/js.translator/testData/box/inline/multipleCallableReferenceUsage.kt");
+        }
+
+        @Test
         @TestMetadata("noInlineLambda.kt")
         public void testNoInlineLambda() throws Exception {
             runTest("js/js.translator/testData/box/inline/noInlineLambda.kt");
