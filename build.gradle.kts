@@ -522,6 +522,9 @@ allprojects {
                 freeCompilerArgs += "-Xuse-fir"
                 freeCompilerArgs += "-Xabi-stability=stable"
             }
+            if (jvmTarget != "1.6") {
+                freeCompilerArgs += "-Xjvm-default=all"
+            }
         }
     }
 
